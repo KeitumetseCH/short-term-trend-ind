@@ -16,7 +16,6 @@ color undecided = C'245,90,16'; //EMA crossover colour
 
 //VOID INITIALISATION
 int OnInit(){
-   int colourChoice = 0;
    PrintIndictor(); // initialise indicator graphic
    
    return(INIT_SUCCEEDED);
