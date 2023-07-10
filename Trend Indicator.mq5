@@ -1,11 +1,11 @@
 //+------------------------------------------------------------------+
 //|                                              Trend Indicator.mq5 |
 //|                                                     KeitumetseCH |
-//|                            https://keitumetse.ternitidigital.com |
+//|                          https://keitumetse.ternitidigital.co.za |
 //+------------------------------------------------------------------+
 #property copyright ""
 #property link      ""
-#property version   "1.00"
+#property version   ""
 #property strict
 #property indicator_chart_window
 
@@ -16,7 +16,8 @@ color undecided = C'245,90,16'; //EMA crossover colour
 
 //VOID INITIALISATION
 int OnInit(){
-   PrintIndictor(); // initialise indicator graphic
+   PrintIndictor("IndicatorPanel", 30, 30, 27, 26, 3); // initialise indicator graphic
+   PrintIndictor("Arrow", 21, 21, 9, 9, 1);
    
    return(INIT_SUCCEEDED);
 }
@@ -78,42 +79,24 @@ void deinit(){
    ObjectDelete(0, "Arrow"); // delete indicator graphic from chart
 }
 //-----------------------------------------------------------------------------
-void PrintIndictor(){
-   string objName1 = "IndicatorPanel";
-   ObjectCreate(0,objName1,OBJ_RECTANGLE_LABEL,0,0,0);
-   ObjectSetInteger(0,objName1,OBJPROP_XDISTANCE,30);
-   ObjectSetInteger(0,objName1,OBJPROP_YDISTANCE,30);
-   ObjectSetInteger(0,objName1,OBJPROP_XSIZE,27);
-   ObjectSetInteger(0,objName1,OBJPROP_YSIZE,26);
-   ObjectSetInteger(0,objName1,OBJPROP_BGCOLOR,longColour);
-   ObjectSetInteger(0,objName1,OBJPROP_BORDER_TYPE,BORDER_FLAT);
-   ObjectSetInteger(0,objName1,OBJPROP_CORNER,CORNER_RIGHT_LOWER);
-   ObjectSetInteger(0,objName1,OBJPROP_COLOR,longColour);
-   ObjectSetInteger(0,objName1,OBJPROP_STYLE,STYLE_SOLID);
-   ObjectSetInteger(0,objName1,OBJPROP_WIDTH,3);
-   ObjectSetInteger(0,objName1,OBJPROP_BACK,false); 
-   ObjectSetInteger(0,objName1,OBJPROP_SELECTABLE,false); 
-   ObjectSetInteger(0,objName1,OBJPROP_SELECTED,false); 
-   ObjectSetInteger(0,objName1,OBJPROP_HIDDEN,true); 
-   ObjectSetInteger(0,objName1,OBJPROP_ZORDER,0);
-   
-   string objName2 = "Arrow";   
-   ObjectCreate(0,objName2,OBJ_RECTANGLE_LABEL,0,0,0);
-   ObjectSetInteger(0,objName2,OBJPROP_XDISTANCE,21);
-   ObjectSetInteger(0,objName2,OBJPROP_YDISTANCE,21);
-   ObjectSetInteger(0,objName2,OBJPROP_XSIZE,9);
-   ObjectSetInteger(0,objName2,OBJPROP_YSIZE,9);
-   ObjectSetInteger(0,objName2,OBJPROP_BGCOLOR,longColour);
-   ObjectSetInteger(0,objName2,OBJPROP_BORDER_TYPE,BORDER_FLAT);
-   ObjectSetInteger(0,objName2,OBJPROP_CORNER,CORNER_RIGHT_LOWER);
-   ObjectSetInteger(0,objName2,OBJPROP_COLOR,longColour);
-   ObjectSetInteger(0,objName2,OBJPROP_STYLE,STYLE_SOLID);
-   ObjectSetInteger(0,objName2,OBJPROP_WIDTH,1);
-   ObjectSetInteger(0,objName2,OBJPROP_BACK,false); 
-   ObjectSetInteger(0,objName2,OBJPROP_SELECTABLE,false); 
-   ObjectSetInteger(0,objName2,OBJPROP_SELECTED,false); 
-   ObjectSetInteger(0,objName2,OBJPROP_HIDDEN,true); 
-   ObjectSetInteger(0,objName2,OBJPROP_ZORDER,0);
+void PrintIndictor(string objName, int objXDis, int objYDis, int objXSiz, int objYSiz, int objBorderWidth){
+
+   ObjectCreate(0,objName,OBJ_RECTANGLE_LABEL,0,0,0);
+   ObjectSetInteger(0,objName,OBJPROP_XDISTANCE,objXDis);
+   ObjectSetInteger(0,objName,OBJPROP_YDISTANCE,objYDis);
+   ObjectSetInteger(0,objName,OBJPROP_XSIZE,objXSiz);
+   ObjectSetInteger(0,objName,OBJPROP_YSIZE,objYSiz);
+   ObjectSetInteger(0,objName,OBJPROP_BGCOLOR,longColour);
+   ObjectSetInteger(0,objName,OBJPROP_BORDER_TYPE,BORDER_FLAT);
+   ObjectSetInteger(0,objName,OBJPROP_CORNER,CORNER_RIGHT_LOWER);
+   ObjectSetInteger(0,objName,OBJPROP_COLOR,longColour);
+   ObjectSetInteger(0,objName,OBJPROP_STYLE,STYLE_SOLID);
+   ObjectSetInteger(0,objName,OBJPROP_WIDTH,objBorderWidth);
+   ObjectSetInteger(0,objName,OBJPROP_BACK,false); 
+   ObjectSetInteger(0,objName,OBJPROP_SELECTABLE,false); 
+   ObjectSetInteger(0,objName,OBJPROP_SELECTED,false); 
+   ObjectSetInteger(0,objName,OBJPROP_HIDDEN,true); 
+   ObjectSetInteger(0,objName,OBJPROP_ZORDER,0);
 }
 
 void ChangeColour(color tempColour, int sectionChoice){
