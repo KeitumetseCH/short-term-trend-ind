@@ -10,6 +10,7 @@
 #property indicator_chart_window
 
 input bool activateHTT = false; //Activate Higher Timeframe Monitoring
+input ENUM_TIMEFRAMES CandleTimeframe = PERIOD_H4; //Candle Monitor Timeframe
 input ENUM_TIMEFRAMES Timeframe = PERIOD_H4; //Higher Timeframe Trend
 
 input color longColour = C'0,170,0'; //Long Colour
@@ -19,14 +20,14 @@ color undecided = C'245,90,16'; //EMA crossover colour
 
 //VOID INITIALISATION
 int OnInit(){
-   PrintIndictor("IndicatorPanel", 30, 30, 27, 26, 3); // initialise indicator graphic
-   PrintIndictor("Arrow", 21, 21, 9, 9, 1);
+   PrintIndictor("IndicatorPanel", 30, 30, 27, 26, 3, TimeFrameString(_Period)); // initialise indicator graphic
+   PrintIndictor("Arrow", 21, 21, 9, 9, 1, TimeFrameString(_Period));
    
    if(activateHTT){
-      PrintIndictor("IndicatorPanelHT", 69, 30, 27, 26, 3); // initialise indicator graphic
-      PrintIndictor("ArrowHT", 60, 21, 9, 9, 1);
-      PrintIndictor("CandleLower", 40, 17, 8, 13, 1);
-      PrintIndictor("CandleUpper", 40, 30, 8, 13, 1);
+      PrintIndictor("IndicatorPanelHT", 69, 30, 27, 26, 3, TimeFrameString(Timeframe)); // initialise indicator graphic
+      PrintIndictor("ArrowHT", 60, 21, 9, 9, 1, TimeFrameString(Timeframe));
+      PrintIndictor("CandleLower", 40, 17, 8, 13, 1, TimeFrameString(CandleTimeframe)); // candle monitor
+      PrintIndictor("CandleUpper", 40, 30, 8, 13, 1, TimeFrameString(CandleTimeframe));
    }else{
       ObjectDelete(0, "IndicatorPanelHT"); // delete indicator graphic from chart
       ObjectDelete(0, "ArrowHT"); // delete indicator graphic from chart
@@ -91,9 +92,9 @@ void calculateTrend(ENUM_TIMEFRAMES timeF, string rsiEma, string emaBid){
 }
 void calculateCandle(){
    double bid = NormalizeDouble(SymbolInfoDouble(_Symbol,SYMBOL_BID),_Digits); // declaring a variable to store the Bid price
-   double openPrice = iOpen(_Symbol,Timeframe,0); // declaring a variable to store the candle open price
-   double priceHigh = iHigh(_Symbol,Timeframe,0); // declaring a variable to store the candle high price
-   double priceLow = iLow(_Symbol,Timeframe,0); // declaring a variable to store the candle low price
+   double openPrice = iOpen(_Symbol,CandleTimeframe,0); // declaring a variable to store the candle open price
+   double priceHigh = iHigh(_Symbol,CandleTimeframe,0); // declaring a variable to store the candle high price
+   double priceLow = iLow(_Symbol,CandleTimeframe,0); // declaring a variable to store the candle low price
    bool bullBear; // declaring a variable to store the bull/bear flag
    double topWick, bottomWick, candleSize; // declaring variables to store the sizes of the top wick, bottom wick and the candle size
    
@@ -146,7 +147,7 @@ double RsiValue(ENUM_TIMEFRAMES timeF, int period){
    
    return rsi;
 }
-void PrintIndictor(string objName, int objXDis, int objYDis, int objXSiz, int objYSiz, int objBorderWidth){
+void PrintIndictor(string objName, int objXDis, int objYDis, int objXSiz, int objYSiz, int objBorderWidth, string objTimeFrame){
    ObjectCreate(0,objName,OBJ_RECTANGLE_LABEL,0,0,0);
    ObjectSetInteger(0,objName,OBJPROP_XDISTANCE,objXDis);
    ObjectSetInteger(0,objName,OBJPROP_YDISTANCE,objYDis);
@@ -158,13 +159,29 @@ void PrintIndictor(string objName, int objXDis, int objYDis, int objXSiz, int ob
    ObjectSetInteger(0,objName,OBJPROP_COLOR,longColour);
    ObjectSetInteger(0,objName,OBJPROP_STYLE,STYLE_SOLID);
    ObjectSetInteger(0,objName,OBJPROP_WIDTH,objBorderWidth);
+   ObjectSetString(0,objName,OBJPROP_TOOLTIP,objTimeFrame); 
    ObjectSetInteger(0,objName,OBJPROP_BACK,false); 
    ObjectSetInteger(0,objName,OBJPROP_SELECTABLE,false); 
    ObjectSetInteger(0,objName,OBJPROP_SELECTED,false); 
    ObjectSetInteger(0,objName,OBJPROP_HIDDEN,true); 
    ObjectSetInteger(0,objName,OBJPROP_ZORDER,0);
 }
-
+string TimeFrameString(int tempPeriod){ // convert period to text
+   string convertedPeriod;
+   switch(tempPeriod){
+      case 1: convertedPeriod = "1 Min";break;
+      case 5: convertedPeriod = "5 Min";break;
+      case 15: convertedPeriod = "15 Min";break;
+      case 30: convertedPeriod = "30 Min";break;
+      case 16385: convertedPeriod = "1 Hour";break;
+      case 16388: convertedPeriod = "4 Hours";break;
+      case 16408: convertedPeriod = "Daily";break;
+      case 32769: convertedPeriod = "Weekly";break;
+      case 49153: convertedPeriod = "Monthly";break;
+      default: convertedPeriod = _Period;break;
+   }
+   return convertedPeriod;
+}
 void ChangeColour(color tempColour, int sectionChoice, string objName){
    switch(sectionChoice){
       case 1: // change RSI section colour
